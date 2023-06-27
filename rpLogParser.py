@@ -1,5 +1,8 @@
-import os,re
+#project located at: https://github.com/rahidt/RI-SCRIPTS
 version = "18, vscode"
+
+import os,re
+
 ##global variables
 #globals, general variables
 LOG_NAME = "../../Log2Cmd/mrdc.log"#"mrdc.log_SMALL" #log file name

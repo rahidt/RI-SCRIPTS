@@ -1,0 +1,292 @@
+Command is: /home/release/RDC/RDC_2019A/release/RealIntent_P8.23//bin/mrdc -i runScript.rdc
+Platform is CentOS Linux release 7.9.2009 (Core)
+	  Meridian(TM) RDC Verification System
+	MeridianRDC 2019.A.P8.23.RDC for RHEL 6.0-64, Rev 145473, Built On 04/04/2023 At 10:02:40
+	Real Intent Inc. All Rights Reserved (1998-2023)
+
+Run by "roman" on host "typhoon"
+Date 4/5/2023, Time 23:37:54, Process ID 2481
+Working directory is "/home/roman/Testcases/RDC/RVE_54179_RDC_3380_new_feature_stubs_stats_in_log/RP_Validation_try1"
+Found feature "MeridianRDCBase" in the license file list.
+Found feature "MeridianRDCKey" in the license file list.
+Found feature "RealIntentCommon" in the license file list.
+Acquired Write lock on DB
+Using project directory "meridian_project"
+Loading /home/release/RDC/RDC_2019A/release/RealIntent_P8.23/.realrc ...
+Finished loading /home/release/RDC/RDC_2019A/release/RealIntent_P8.23/.realrc
+**> set ri_report_empty_modules_in_BLACK_BOX true
+
+**> analyze -sv adclk.v
+  INFO [#19001] : Analyzing file "/home/release/RDC/RDC_2019A/release/RealIntent_P8.23//Meridian/CDC/lib/sv_packages/std.sv".
+  INFO [#19001] : Analyzing file "/home/release/RDC/RDC_2019A/release/RealIntent_P8.23//Meridian/CDC/lib/sv_packages/upf.sv".
+  INFO [#19001] : Analyzing file "/home/roman/Testcases/RDC/RVE_54179_RDC_3380_new_feature_stubs_stats_in_log/RP_Validation_try1/adclk.v".
+  INFO [# 1001] : 'analyze' finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 46  prog-peak 46
+
+
+**> analyze -sv pd_dptx.hdr
+  INFO [#19001] : Analyzing file "/home/roman/Testcases/RDC/RVE_54179_RDC_3380_new_feature_stubs_stats_in_log/RP_Validation_try1/pd_dptx.hdr".
+  INFO [# 1001] : 'analyze' finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 47  prog-peak 47
+
+
+**> elaborate pd_dptx adclk
+  INFO [#19006] : Top level unit "pd_dptx".
+  INFO [#19007] : on line 2 in file /home/roman/Testcases/RDC/RVE_54179_RDC_3380_new_feature_stubs_stats_in_log/RP_Validation_try1/pd_dptx.hdr
+                : Elaborating module "pd_dptx".
+  WARN [#25010] : on line 228 in file /home/roman/Testcases/RDC/RVE_54179_RDC_3380_new_feature_stubs_stats_in_log/RP_Validation_try1/pd_dptx.hdr
+                : Signal "unconnected" of module "pd_dptx" does not affect the output
+
+
+   Compilation Summary
+-------------------------
+
+                                        Count
+   Blackboxed modules                     0         
+   Blackboxed big ids                     0         
+   Blackboxed non-const range assignments 0         
+   Blackboxed big loops                   0         
+   Grey-boxed big loops                   0         
+   Empty modules                          0         
+   Code ignored by pragmas                0         
+   Ignored protected code                 0         
+   Decrypted protection envelopes         0         
+   Non-synthesizable RTL                  0         
+   Unsupported constructs                 0         
+   RAMs                                   0         
+   Liberty timing cells                   0         
+   Liberty RAMs not modelled              0         
+   Non-synthesizable UDP                  0         
+
+   No major compilation issue found
+
+   End Compilation Summary
+-----------------------------
+
+Writing iVision zdb to disk...
+done
+  INFO [# 1001] : 'elaborate' finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 51  prog-peak 67
+
+INFO: Erasing temporary files from previous run
+  INFO [# 1001] : Initializing the design on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 51  prog-peak 67
+
+
+Design Statistics:
+  Total signals               =  1091
+    Inputs                    =  748
+    Inouts                    =  12
+    Outputs                   =  307
+    Wires (comb)              =  24
+    Flops                     =  0
+    Latches                   =  0
+    RAM Instances             =  0 (0 flops, 0 latches)
+    BBoxIns                   =  0
+  Other details
+    Total assignments         =  36
+    Logic gates (expressions) =  0
+  Equivalent NAND2 gate count =  12
+
+  INFO [# 1001] : FMN: 1133 on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 51  prog-peak 67
+
+  INFO [# 1001] : Design is initialized on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 51  prog-peak 67
+
+
+**> analyze_intent -disable_auto_intent_generation
+  INFO [#109002] : Using the current scenario "default"
+  INFO [# 6045] : No constraint group during SDC-to-ENV conversion.
+  INFO [# 1001] : 'analyze_intent' stats after initialization on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 52  prog-peak 67
+
+Processing Exclusive Inputs.
+Computing and writing waveform debug info ...
+  Writing attributes to zdb... 
+  Time taken in debug info = 0.01 seconds
+
+  INFO [# 1001] : I_BLACK_BOX finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+
+  INFO [# 1001] : I_CLK_GROUPS finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+
+  INFO [# 1001] : I_RST_SIGNAL finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+
+  INFO [# 1001] : W_CLOCK_THROUGH_MULT_PD finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+
+  INFO [# 1001] : S_HENV_TYPE_CONFLICT finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+
+  INFO [# 1001] : S_HENV_ATTR_CONFLICT finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+
+  INFO [# 1001] : S_HENV_WAVE_CONFLICT finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+
+  INFO [# 1001] : S_HENV_PORT_CONFLICT finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+
+  INFO [# 1001] : S_HENV_MISSING_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+
+  INFO [# 1001] : S_HENV_EXTRA_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+
+  INFO [# 1001] : S_HENV_MISSING_PORTS finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+
+  INFO [# 1001] : I_HENV_WAVE_MAP finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+
+  INFO [# 1001] : I_HENV_DB_MAP finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+
+  INFO [# 1001] : HENV_PARAM_MISMATCH finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+
+  INFO [# 1001] : S_CLK_GATE_NO_WAVE finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+
+  INFO [# 1001] : S_NOCLK finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+
+  INFO [# 1001] : S_GENCLK finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+
+  INFO [# 1001] : S_MULTCLK finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+
+  INFO [# 1001] : I_SYNC_WAVEFORMS finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+
+  INFO [# 1001] : S_UNKNOWN_CLKPOL finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+
+  INFO [# 1001] : S_NORST finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+
+  INFO [# 1001] : S_CONF_ENV finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+
+  INFO [# 1001] : S_MISSING_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+
+  INFO [# 1001] : S_EXTRA_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+
+  INFO [# 1001] : S_RST_SPEC_OVERLAP finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+
+
+Start S_INPUT_NO_WAVE  : Wed Apr  5 23:37:55 2023
+                         mem=188 Mb;   peak=201 Mb
+End   S_INPUT_NO_WAVE  : Wed Apr  5 23:37:55 2023  - time elapsed:          0.00s
+                         mem=198 Mb;   peak=201 Mb
+
+  INFO [# 1001] : S_INPUT_NO_WAVE finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+
+  INFO [# 1001] : S_NET_NO_WAVE finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+
+  INFO [# 1001] : S_OUTPUT_NO_WAVE finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+
+  INFO [# 1001] : S_RST_INV finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+
+  INFO [# 1001] : S_RST_INV_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+
+  INFO [# 1001] : S_CLK_OFF_SUBTREE finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+
+  INFO [# 1001] : S_INPUT_CLK_DOMAIN finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+
+
+Start S_INT_RST_SYNC  : Wed Apr  5 23:37:55 2023
+                        mem=187 Mb;   peak=209 Mb
+Total crossings detected: 0
+Crossing pairs confirmed: 0
+End   S_INT_RST_SYNC  : Wed Apr  5 23:37:55 2023  - time elapsed:          0.00s
+                        mem=187 Mb;   peak=209 Mb
+
+  INFO [# 1001] : S_INT_RST_SYNC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+
+  INFO [# 1001] : I_PSEUDO_CONSTANT finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+
+  INFO [# 1001] : I_CONSTANT finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+
+  INFO [# 1001] : S_PORT_NO_RST_GROUP finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+
+  INFO [# 1001] : IGNORED_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+
+  INFO [# 1001] : OVERWRITTEN_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+
+  INFO [# 1001] : 'analyze_intent' finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+
+
+**> verify_rdc
+  INFO [#109002] : Using the current scenario "__ri_default"
+  INFO [# 1001] : 'verify_rdc' statistics on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 111  prog-peak 209
+
+WARN: ENV database with the name "meridian_project/pd_dptx/dbs/__ri_default" exists. Overwriting...
+  INFO [# 1001] : Write ECDB to disk finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 111  prog-peak 209
+
+
+Starting RDC structural analysis ...
+Computing clock domains...
+Processing Exclusive Inputs.
+Detecting domain crossings...
+Detecting synchronizers...
+MT processing RFA:8/4
+Total crossings marked: 0
+BDD GC calls = 0, total time = 0 ms
+MT processing CON:8/8
+Total crossings detected: 0, total drivers processed: 0, crossing pairs confirmed: 0
+  INFO [# 1001] : 'verify_rdc' statistics on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 112  prog-peak 209
+
+  Intent attributes for scenario '__ri_default' are already written.
+  INFO [# 1001] : I_ASSUME finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 339  prog-peak 340
+
+  INFO [# 1001] : PULSE_SYNC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 340  prog-peak 340
+
+  INFO [# 1001] : I_SYNC_CROSSING finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 340  prog-peak 340
+
+
+Start I_RST_SYNC  : Wed Apr  5 23:37:55 2023
+                    mem=416 Mb;   peak=416 Mb
+Total crossings detected: 0
+MT processing INC:8/8
+Crossing pairs confirmed: 0
+End   I_RST_SYNC  : Wed Apr  5 23:37:55 2023  - time elapsed:          0.03s
+                    mem=416 Mb;   peak=500 Mb
+
+  INFO [# 1001] : I_RST_SYNC/W_REDUNDANT_SYNC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 416  prog-peak 500
+
+
+Start W_RST_HALF  : Wed Apr  5 23:37:55 2023
+                    mem=416 Mb;   peak=500 Mb
+Total crossings detected: 0
+MT processing WLF:8/8
+Crossing pairs confirmed: 0
+End   W_RST_HALF  : Wed Apr  5 23:37:55 2023  - time elapsed:          0.03s
+                    mem=416 Mb;   peak=500 Mb
+
+  INFO [# 1001] : W_RST_HALF finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 416  prog-peak 500
+
+
+Start W_ASYNC_RST_FLOPS  : Wed Apr  5 23:37:55 2023
+                           mem=416 Mb;   peak=500 Mb
+Total crossings detected: 0
+MT processing WPS:8/8
+Crossing pairs confirmed: 0
+End   W_ASYNC_RST_FLOPS  : Wed Apr  5 23:37:55 2023  - time elapsed:          0.03s
+                           mem=416 Mb;   peak=500 Mb
+
+  INFO [# 1001] : W_ASYNC_RST_FLOPS finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 416  prog-peak 500
+
+  INFO [# 1001] : SYNCH_RST_CROSSINGS finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 340  prog-peak 500
+
+  INFO [# 1001] : After S_SCENARIO_CONFLICT build on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 340  prog-peak 500
+
+  INFO [# 1001] : After S_SKIPPED_RST_SCN build on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 340  prog-peak 500
+
+Clock enhancement is on
+  INFO [#17033] : Profile computation will be done sequentially
+
+  INFO [#17035] : RDC checks will be done sequentially
+Mapping of vcd file names to their corresponding group/scenario
+  INFO [#17027] : Total number of unique metastable flops is 0.
+  INFO [#17026] : Flat count of RF->MF pairs is 0.
+  INFO [# 1001] : After S_FLOPS_NO_RST_SCN build on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 350  prog-peak 500
+
+
+Analysis done ...
+Equivalent NAND2 gate count                     : 12
+Total Asynchronous clock domains                : 0
+Total Clock waveforms                           : 0
+Total Reset signals specified                   : 0 (0 Primary, 0 Functional)
+Total Reset scenarios specified                 : 0
+Total Error violations found                    : 0
+  INFO [# 1001] : 'verify_rdc' finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 350  prog-peak 500
+
+
+**> report_policy ALL -verbose -compat -output ClockDomain.rpt
+  INFO [# 1001] : 'report_policy' finished on 4/5/2023 at 23:37:56 ; self time (s): user 0  sys 0  real 1 ; total time (s): user 1  sys 0  real 2 ; memory (MB): curr 351  prog-peak 500
+
+
+**> exit 0
+To debug your results, run iDebug as below:
+idebug -project meridian_project -design pd_dptx
+
+real	0m1.426s
+user	0m0.825s
+sys	0m0.219s
+Run finished on 04/05/2023 at 23:37:56

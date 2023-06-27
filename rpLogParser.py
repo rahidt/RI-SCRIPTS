@@ -1,8 +1,8 @@
 import os,re
-version = "/Users/romanpaleria/Documents/Scripts/GitProjects/RI-SCRIPTS/rpLogParser.py"
+version = "15, vscode"
 ##global variables
 #globals, general variables
-LOG_NAME = "mrdc.log"#"mrdc.log_SMALL" #log file name
+LOG_NAME = "mrdc.log_SMALL"#"mrdc.log_SMALL" #log file name
 LOG = "" #log file content
 #BAD_LINES_TO_DEBUG = []
 CMDS = [] #row commands, including prefixes
@@ -49,72 +49,6 @@ def open_log():
     print ("open_log finished")
 
 
-def find_commands_in_log():
-    print("find_commands_in_log()")
-    
-    import datetime
-    log_lines = LOG.splitlines()  # Store the log lines in a variable
-    print("num of lines in the log: ", len(log_lines))
-    
-    # Loop through each line in the log
-    for id, line in enumerate(log_lines):
-        if not line:
-            continue
-        if line.startswith(LOG_PREFIX_D['orig']):
-            if line.startswith('**> exit '):
-                continue
-            #print(id, datetime.datetime.now(), ", line: ", line)
-            if id + 1 < len(log_lines):
-                next_line = log_lines[id + 1]
-                if not (next_line.startswith("  INFO ") or
-                        next_line.startswith("  WARN ") or
-                        #re.sub(r"\s+", "", next_line) or
-                        not next_line or
-                        next_line == "Finalizing block DB data..." or
-                        next_line == "################################################################################" or
-                        next_line.startswith("Setting ")):
-
-                    print(RED +"line #", id," ERROR, need debug: " + RESET, next_line)
-                    BAD_LINES_TO_DEBUG.append(("on line id: ", id , ". line: ",next_line))
-                    '''if len(BAD_LINES_TO_DEBUG) > 10:
-                        break;
-                    # Take appropriate error handling action instead of abrupt termination'''
-            #print("next line: ", next_line)
-    #print(RED + "\n\nBAD_LINES_TO_DEBUG: " + RESET, BAD_LINES_TO_DEBUG)
-    print(RED + "in total {} lines to debug".format(len(BAD_LINES_TO_DEBUG))+ RESET)
-
-'''
-def find_commands_in_log():
-    print("find_commands_in_log")
-    print("len of the LOG: ", len(LOG))
-    
-    import datetime
-    #foreach line in the log file, if it starts with one from CMDS_LIST,
-    #  print the line and index.
-    for id,line in enumerate(LOG.splitlines()):
-        if len(line) == 0:
-            continue
-        if line[0] =="*":
-            if line.startswith('**> exit '):
-                continue
-            print(id, datetime.datetime.now(),", line: ", line)
-            next_line =  LOG.splitlines()[LOG.splitlines().index(line)+1]
-            if not (next_line.startswith("  INFO ") or 
-                    next_line.startswith("  WARN ") or 
-                    next_line =="" or 
-                    next_line == "Finalizing block DB data..." or
-                    next_line == "################################################################################" or
-                    next_line.startswith("Setting ")):
-                print("next line ERROR, need debug: ", next_line)
-                exit(0)
-            print("next line: ", LOG.splitlines()[LOG.splitlines().index(line)+1])
-'''        
-'''   #loop print LOG lines with index prefix
-    for index, line in enumerate(LOG.splitlines()):
-        print("index: ", index, " line: ", line)
-'''
-
-
 # Check for "{" balance
 def check_tcl_syntax(cmd, cont):
     open_braces = cmd.count('{')
@@ -150,15 +84,104 @@ def find_commands_in_log_chatGTM_from_perl():
     print(BLUE + "num of CMDS: " + RESET, len(CMDS))   
     #print('\n'.join(f'{index}: {item}' for index, item in enumerate(CMDS))) 
 
+
+
+
+def generate_CTL_per_read_design_db_flow():
+    global CTL_CMDS
+    print("generate_CTL_per_read_design_db_flow() orig num of commands: ", len(CTL_CMDS))
+    #removing all irelevant commands as replacing with read_design_db
+    #0. initializing list and dict {cmd:cmd_count}
+    skip_commands_list = ["read_liberty ", "analyze", "create_scenario ", "current_scenario ", "read_sdc ", "read_env ", "analyze_intent ", "exit "]
+    skip_commands_dict = {cmd: 0 for cmd in skip_commands_list} 
+    for cmd in CTL_CMDS[:]:  # Iterate over a copy of the list to safely remove items
+        for skip_cmd in skip_commands_dict:
+            if skip_cmd in cmd:
+                CTL_CMDS.remove(cmd)
+                skip_commands_dict[skip_cmd] += 1
+                break
+    print("removed following commands as using read_design_db flow")
+    for key, value in skip_commands_dict.items():
+        print(key, "=", value)  
+    #1. get partition_name from elaborate command, and removing it from the list.
+    elab_partitions_list = [cmd for cmd in CTL_CMDS if cmd.startswith("elaborate ")]
+    print("elab_partitions_list : ",elab_partitions_list )
+    if len(elab_partitions_list) == 0 : 
+        print ("Error - no elaborate commands found in the log" )
+        exit(2)
+    elif len(elab_partitions_list)  > 1 : 
+        print ("Error - currently supporting only flow with single elaborate command. what to do if there is none/multiple elab commands in the log?..." )
+        exit(2)
+    
+    elab_cmd = elab_partitions_list[0]
+    pattern = r'elaborate '
+    partition_name = re.sub(pattern, '', elab_cmd)
+    print("partition name will be extracted from elab command:", partition_name)
+    
+    pattern = r'\-ivision '
+    partition_name = re.sub(pattern, '', partition_name )
+    #print(partition_name)
+    
+    pattern = r'-black_box\s*\w+ '
+    partition_name = re.sub(pattern, '', partition_name ) 
+    #print(partition_name)
+    
+    pattern = r'-black_box\s*\{[^}]+\}'
+    partition_name = re.sub(pattern, '', partition_name ) 
+    #print(partition_name)
+    
+    pattern = r'-auto_black_box'
+    partition_name = re.sub(pattern, '', partition_name ) 
+    print("final parition name: ",partition_name)
+
+    ##finding all set_user_reset_synchronizer commands, and placing them before the analyze_intent 
+    set_user_reset_synchronizer_cmds = [] 
+    for cmd in CTL_CMDS[:]:  # Iterate over a copy of the list to safely remove items
+        if cmd.startswith("set_user_reset_synchronizer ") :
+            CTL_CMDS.remove(cmd)
+            set_user_reset_synchronizer_cmds.append(cmd)
+    #print("set_user_reset_synchronizer_cmds", set_user_reset_synchronizer_cmds )
+    
+    ##finding all read_rdc_db commands, and placing them before the read_env
+    read_rdc_db_cmds = [] 
+    for cmd in CTL_CMDS[:]:  # Iterate over a copy of the list to safely remove items
+        if cmd.startswith("read_rdc_db ") :
+            CTL_CMDS.remove(cmd)
+            read_rdc_db_cmds.append(cmd)
+    #print("read_rdc_db_cmds", read_rdc_db_cmds )
+
+    #remove elaborate commands: commands = [cmd for cmd in commands if not cmd.startswith("elaborate ")]
+    #replacing the elaborate command with next multiple commands: read_design_db, read_env, and analyze_intent
+    new_cmds = ["read_design_db " + partition_name + " -project ./meridian_project"] + \
+               read_rdc_db_cmds + \
+               ["read_env " + ALL_ENV_CMDS_F_NAME ] + \
+               set_user_reset_synchronizer_cmds + \
+               ["analyze_intent -disable_auto_intent_generation"]
+    for index, element in enumerate(CTL_CMDS):
+        if element.startswith('elaborate'):
+            #print("Index:", index)
+            break
+    CTL_CMDS[index:index+1] = new_cmds 
+    #2. generate read_design_db command.
+    #3. rm commands that read_design_db replaces, like: read_liberty, full list: #print "Skipped $read_liberty_cnt read_liberty commands\nSkipped $analyze_cnt analyze commands\nSkipped $scenario_cnt scenario related commands\nSkipped $read_sdc_cnt read_sdc commands\nSkipped $read_env_cnt read_env commands\nSkipped $analyze_intent_cnt analyze_intent commands\n";
+    print("generate_CTL_per_read_design_db_flow() finished, cur num of commands: ", len(CTL_CMDS))
+
+
+
+
 def generate_CTL_and_ENV_from_CMDS():
     global CTL_CMDS, ENV_CMDS, PROBLEM_CMDS
     for cmd in CMDS:
         if re.match(LOG_PREFIX_D['env'], cmd):
-            ENV_CMDS.append(cmd)
+            cmd_without_prefix = re.sub(r'^{}(.*)'.format(LOG_PREFIX_D['env']), r'\1', cmd)
+            ENV_CMDS.append(cmd_without_prefix)
         elif re.match(LOG_PREFIX_D['ctl'], cmd):
-            CTL_CMDS.append(cmd)
+            cmd_without_prefix = re.sub(r'^{}(.*)'.format(LOG_PREFIX_D['ctl']), r'\1', cmd)
+            CTL_CMDS.append(cmd_without_prefix)
         else:
             PROBLEM_CMDS.append(cmd)
+
+    generate_CTL_per_read_design_db_flow()
  
 def generate_files():
     print("generate_files")
@@ -190,10 +213,13 @@ def generate_files():
 def main():
     print("main function")
     open_log()
-    #find_commands_in_log()
     find_commands_in_log_chatGTM_from_perl()
     generate_files()
-    print("main function finished, version: ", version)
+    print("main function finished, version:", version)
 
 if __name__ == "__main__":
     main()
+
+
+    
+    

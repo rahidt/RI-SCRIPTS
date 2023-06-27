@@ -1,5 +1,5 @@
 import os,re
-
+version = "/Users/romanpaleria/Documents/Scripts/GitProjects/RI-SCRIPTS/rpLogParser.py"
 ##global variables
 #globals, general variables
 LOG_NAME = "mrdc.log"#"mrdc.log_SMALL" #log file name
@@ -193,7 +193,7 @@ def main():
     #find_commands_in_log()
     find_commands_in_log_chatGTM_from_perl()
     generate_files()
-    print("main function finished")
+    print("main function finished, version: ", version)
 
 if __name__ == "__main__":
     main()

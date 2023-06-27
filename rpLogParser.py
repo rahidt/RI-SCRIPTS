@@ -2,9 +2,8 @@ import os,re
 version = "18, vscode"
 ##global variables
 #globals, general variables
-LOG_NAME = "mrdc.log_SMALL"#"mrdc.log_SMALL" #log file name
+LOG_NAME = "../../Log2Cmd/mrdc.log"#"mrdc.log_SMALL" #log file name
 LOG = "" #log file content
-#BAD_LINES_TO_DEBUG = []
 CMDS = [] #row commands, including prefixes
 CTL_CMDS = []
 ENV_CMDS = []
@@ -22,6 +21,7 @@ ALL_CMDS_F_NAME     = "ri_all_orig.cmd" #include prefixes
 ALL_CTL_CMDS_F_NAME = "ri_ctl.cmd" 
 ALL_ENV_CMDS_F_NAME = "ri_env.cmd" 
 ALL_PROBLEM_CMDS_F_NAME= 'ri_to_debug.cmd'
+ALL_RI_STATS_SUMMARY_F_NAME = "ri_stats_summary.txt"
 
 #global variables, for each command 
 
@@ -55,14 +55,14 @@ def check_tcl_syntax(cmd, cont):
     close_braces = cmd.count('}')
     return 0 if open_braces == close_braces else cont + 1
 
-def find_commands_in_log_chatGTM_from_perl():
+def find_commands_in_log():
     import sys
     pos = 0
     cmd = ""
     cont = 0
 
     log_lines = LOG.splitlines()
-    print("find_commands_in_log_chatGTM_from_perl() \nnum of lines in the log: ", len(log_lines))
+    print("find_commands_in_log() \nnum of lines in the log: ", len(log_lines))
     for id, line in enumerate(log_lines):
         pos += 1
         line = line.rstrip('\n') # Remove newline character
@@ -100,9 +100,9 @@ def generate_CTL_per_read_design_db_flow():
                 CTL_CMDS.remove(cmd)
                 skip_commands_dict[skip_cmd] += 1
                 break
-    print("removed following commands as using read_design_db flow")
+    print(YELLOW + "removed following commands as using read_design_db flow" + RESET)
     for key, value in skip_commands_dict.items():
-        print(key, "=", value)  
+        print(YELLOW + "removed command: " + RESET, key, "\t num of occurences: ", value)  
     #1. get partition_name from elaborate command, and removing it from the list.
     elab_partitions_list = [cmd for cmd in CTL_CMDS if cmd.startswith("elaborate ")]
     print("elab_partitions_list : ",elab_partitions_list )
@@ -183,6 +183,44 @@ def generate_CTL_and_ENV_from_CMDS():
 
     generate_CTL_per_read_design_db_flow()
  
+def generate_runtime_stats():
+    print(BLUE+"generate_runtime_stats()"+RESET)
+    lines = LOG.splitlines()
+    # Regular expression patterns to extract relevant information
+    self_time_pattern = r"self time \(s\): user (\d+)  sys (\d+)  real (\d+)"
+    memory_pattern = r"memory \(MB\): curr (\d+)"
+
+    # List to store parsed data
+    parsed_data = []
+
+    # Parse each line and extract the relevant information
+    for line in lines:
+        self_time_match = re.search(self_time_pattern, line)
+        memory_match = re.search(memory_pattern, line)
+        if self_time_match and memory_match:
+            user_time, sys_time, real_time = self_time_match.groups()
+            memory = memory_match.group(1)
+            parsed_data.append((line, int(real_time), int(memory)))
+
+    # Sort the parsed data by real self time and memory consumption
+    sorted_data_time = sorted(parsed_data, key=lambda x: x[1], reverse=True)
+    sorted_data_memory = sorted(parsed_data, key=lambda x: x[2], reverse=True)
+
+    with open(ALL_RI_STATS_SUMMARY_F_NAME, 'w') as f:
+        print("opened file: ", ALL_RI_STATS_SUMMARY_F_NAME)
+        #f.write("%s\n" % item)
+
+        # Print the lines with highest real self time
+        f.write("\nLines sorted by real self time (descending order):\n")
+        for item in sorted_data_time:
+            f.write(f"{item[1]}s: {item[0]}\n")
+            
+        # Print the lines with highest memory consumption
+        f.write("\nLines sorted by memory consumption (descending order):\n")
+        for item in sorted_data_memory:
+            f.write(f"{item[2]}MB: {item[0]}\n")
+
+
 def generate_files():
     print("generate_files")
     print(BLUE+"len of the CMDS: " +RESET, len(CMDS))
@@ -207,13 +245,13 @@ def generate_files():
         for item in PROBLEM_CMDS:
             f.write("%s\n" % item)
 
-
+    generate_runtime_stats()
     print("generate_files finished")
 
 def main():
     print("main function")
     open_log()
-    find_commands_in_log_chatGTM_from_perl()
+    find_commands_in_log()
     generate_files()
     print("main function finished, version:", version)
 

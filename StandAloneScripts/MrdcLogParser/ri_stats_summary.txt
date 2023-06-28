@@ -1,0 +1,126 @@
+
+Lines sorted by real self time (descending order):
+1s:   INFO [# 1001] : 'report_policy' finished on 4/5/2023 at 23:37:56 ; self time (s): user 0  sys 0  real 1 ; total time (s): user 1  sys 0  real 2 ; memory (MB): curr 351  prog-peak 500
+0s:   INFO [# 1001] : 'analyze' finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 46  prog-peak 46
+0s:   INFO [# 1001] : 'analyze' finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 47  prog-peak 47
+0s:   INFO [# 1001] : 'elaborate' finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 51  prog-peak 67
+0s:   INFO [# 1001] : Initializing the design on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 51  prog-peak 67
+0s:   INFO [# 1001] : FMN: 1133 on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 51  prog-peak 67
+0s:   INFO [# 1001] : Design is initialized on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 51  prog-peak 67
+0s:   INFO [# 1001] : 'analyze_intent' stats after initialization on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 52  prog-peak 67
+0s:   INFO [# 1001] : I_BLACK_BOX finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+0s:   INFO [# 1001] : I_CLK_GROUPS finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+0s:   INFO [# 1001] : I_RST_SIGNAL finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+0s:   INFO [# 1001] : W_CLOCK_THROUGH_MULT_PD finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+0s:   INFO [# 1001] : S_HENV_TYPE_CONFLICT finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+0s:   INFO [# 1001] : S_HENV_ATTR_CONFLICT finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+0s:   INFO [# 1001] : S_HENV_WAVE_CONFLICT finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+0s:   INFO [# 1001] : S_HENV_PORT_CONFLICT finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+0s:   INFO [# 1001] : S_HENV_MISSING_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+0s:   INFO [# 1001] : S_HENV_EXTRA_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+0s:   INFO [# 1001] : S_HENV_MISSING_PORTS finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+0s:   INFO [# 1001] : I_HENV_WAVE_MAP finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+0s:   INFO [# 1001] : I_HENV_DB_MAP finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+0s:   INFO [# 1001] : HENV_PARAM_MISMATCH finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+0s:   INFO [# 1001] : S_CLK_GATE_NO_WAVE finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+0s:   INFO [# 1001] : S_NOCLK finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+0s:   INFO [# 1001] : S_GENCLK finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+0s:   INFO [# 1001] : S_MULTCLK finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+0s:   INFO [# 1001] : I_SYNC_WAVEFORMS finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+0s:   INFO [# 1001] : S_UNKNOWN_CLKPOL finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+0s:   INFO [# 1001] : S_NORST finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+0s:   INFO [# 1001] : S_CONF_ENV finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+0s:   INFO [# 1001] : S_MISSING_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+0s:   INFO [# 1001] : S_EXTRA_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+0s:   INFO [# 1001] : S_RST_SPEC_OVERLAP finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+0s:   INFO [# 1001] : S_INPUT_NO_WAVE finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+0s:   INFO [# 1001] : S_NET_NO_WAVE finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+0s:   INFO [# 1001] : S_OUTPUT_NO_WAVE finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+0s:   INFO [# 1001] : S_RST_INV finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+0s:   INFO [# 1001] : S_RST_INV_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+0s:   INFO [# 1001] : S_CLK_OFF_SUBTREE finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+0s:   INFO [# 1001] : S_INPUT_CLK_DOMAIN finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+0s:   INFO [# 1001] : S_INT_RST_SYNC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+0s:   INFO [# 1001] : I_PSEUDO_CONSTANT finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+0s:   INFO [# 1001] : I_CONSTANT finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+0s:   INFO [# 1001] : S_PORT_NO_RST_GROUP finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+0s:   INFO [# 1001] : IGNORED_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+0s:   INFO [# 1001] : OVERWRITTEN_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+0s:   INFO [# 1001] : 'analyze_intent' finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+0s:   INFO [# 1001] : 'verify_rdc' statistics on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 111  prog-peak 209
+0s:   INFO [# 1001] : Write ECDB to disk finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 111  prog-peak 209
+0s:   INFO [# 1001] : 'verify_rdc' statistics on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 112  prog-peak 209
+0s:   INFO [# 1001] : I_ASSUME finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 339  prog-peak 340
+0s:   INFO [# 1001] : PULSE_SYNC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 340  prog-peak 340
+0s:   INFO [# 1001] : I_SYNC_CROSSING finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 340  prog-peak 340
+0s:   INFO [# 1001] : I_RST_SYNC/W_REDUNDANT_SYNC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 416  prog-peak 500
+0s:   INFO [# 1001] : W_RST_HALF finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 416  prog-peak 500
+0s:   INFO [# 1001] : W_ASYNC_RST_FLOPS finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 416  prog-peak 500
+0s:   INFO [# 1001] : SYNCH_RST_CROSSINGS finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 340  prog-peak 500
+0s:   INFO [# 1001] : After S_SCENARIO_CONFLICT build on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 340  prog-peak 500
+0s:   INFO [# 1001] : After S_SKIPPED_RST_SCN build on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 340  prog-peak 500
+0s:   INFO [# 1001] : After S_FLOPS_NO_RST_SCN build on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 350  prog-peak 500
+0s:   INFO [# 1001] : 'verify_rdc' finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 350  prog-peak 500
+
+Lines sorted by memory consumption (descending order):
+416MB:   INFO [# 1001] : I_RST_SYNC/W_REDUNDANT_SYNC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 416  prog-peak 500
+416MB:   INFO [# 1001] : W_RST_HALF finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 416  prog-peak 500
+416MB:   INFO [# 1001] : W_ASYNC_RST_FLOPS finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 416  prog-peak 500
+351MB:   INFO [# 1001] : 'report_policy' finished on 4/5/2023 at 23:37:56 ; self time (s): user 0  sys 0  real 1 ; total time (s): user 1  sys 0  real 2 ; memory (MB): curr 351  prog-peak 500
+350MB:   INFO [# 1001] : After S_FLOPS_NO_RST_SCN build on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 350  prog-peak 500
+350MB:   INFO [# 1001] : 'verify_rdc' finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 350  prog-peak 500
+340MB:   INFO [# 1001] : PULSE_SYNC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 340  prog-peak 340
+340MB:   INFO [# 1001] : I_SYNC_CROSSING finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 340  prog-peak 340
+340MB:   INFO [# 1001] : SYNCH_RST_CROSSINGS finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 340  prog-peak 500
+340MB:   INFO [# 1001] : After S_SCENARIO_CONFLICT build on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 340  prog-peak 500
+340MB:   INFO [# 1001] : After S_SKIPPED_RST_SCN build on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 340  prog-peak 500
+339MB:   INFO [# 1001] : I_ASSUME finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 339  prog-peak 340
+188MB:   INFO [# 1001] : S_GENCLK finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+188MB:   INFO [# 1001] : S_MULTCLK finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+188MB:   INFO [# 1001] : I_SYNC_WAVEFORMS finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+188MB:   INFO [# 1001] : S_UNKNOWN_CLKPOL finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+188MB:   INFO [# 1001] : S_NORST finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+188MB:   INFO [# 1001] : S_CONF_ENV finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+188MB:   INFO [# 1001] : S_MISSING_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+188MB:   INFO [# 1001] : S_EXTRA_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+188MB:   INFO [# 1001] : S_RST_SPEC_OVERLAP finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+188MB:   INFO [# 1001] : S_INPUT_NO_WAVE finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+188MB:   INFO [# 1001] : S_NET_NO_WAVE finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+188MB:   INFO [# 1001] : S_OUTPUT_NO_WAVE finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 188  prog-peak 201
+187MB:   INFO [# 1001] : S_RST_INV finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+187MB:   INFO [# 1001] : S_RST_INV_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+187MB:   INFO [# 1001] : S_CLK_OFF_SUBTREE finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+187MB:   INFO [# 1001] : S_INPUT_CLK_DOMAIN finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+187MB:   INFO [# 1001] : S_INT_RST_SYNC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+187MB:   INFO [# 1001] : I_PSEUDO_CONSTANT finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+187MB:   INFO [# 1001] : I_CONSTANT finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+187MB:   INFO [# 1001] : S_PORT_NO_RST_GROUP finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+187MB:   INFO [# 1001] : IGNORED_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+187MB:   INFO [# 1001] : OVERWRITTEN_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+187MB:   INFO [# 1001] : 'analyze_intent' finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 187  prog-peak 209
+186MB:   INFO [# 1001] : I_BLACK_BOX finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+186MB:   INFO [# 1001] : I_CLK_GROUPS finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+186MB:   INFO [# 1001] : I_RST_SIGNAL finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+186MB:   INFO [# 1001] : W_CLOCK_THROUGH_MULT_PD finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+186MB:   INFO [# 1001] : S_HENV_TYPE_CONFLICT finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+186MB:   INFO [# 1001] : S_HENV_ATTR_CONFLICT finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+186MB:   INFO [# 1001] : S_HENV_WAVE_CONFLICT finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+186MB:   INFO [# 1001] : S_HENV_PORT_CONFLICT finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+186MB:   INFO [# 1001] : S_HENV_MISSING_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+186MB:   INFO [# 1001] : S_HENV_EXTRA_SPEC finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+186MB:   INFO [# 1001] : S_HENV_MISSING_PORTS finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+186MB:   INFO [# 1001] : I_HENV_WAVE_MAP finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+186MB:   INFO [# 1001] : I_HENV_DB_MAP finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+186MB:   INFO [# 1001] : HENV_PARAM_MISMATCH finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+186MB:   INFO [# 1001] : S_CLK_GATE_NO_WAVE finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+186MB:   INFO [# 1001] : S_NOCLK finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 186  prog-peak 201
+112MB:   INFO [# 1001] : 'verify_rdc' statistics on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 112  prog-peak 209
+111MB:   INFO [# 1001] : 'verify_rdc' statistics on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 111  prog-peak 209
+111MB:   INFO [# 1001] : Write ECDB to disk finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 111  prog-peak 209
+52MB:   INFO [# 1001] : 'analyze_intent' stats after initialization on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 52  prog-peak 67
+51MB:   INFO [# 1001] : 'elaborate' finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 51  prog-peak 67
+51MB:   INFO [# 1001] : Initializing the design on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 51  prog-peak 67
+51MB:   INFO [# 1001] : FMN: 1133 on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 51  prog-peak 67
+51MB:   INFO [# 1001] : Design is initialized on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 51  prog-peak 67
+47MB:   INFO [# 1001] : 'analyze' finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 47  prog-peak 47
+46MB:   INFO [# 1001] : 'analyze' finished on 4/5/2023 at 23:37:55 ; self time (s): user 0  sys 0  real 0 ; total time (s): user 0  sys 0  real 1 ; memory (MB): curr 46  prog-peak 46

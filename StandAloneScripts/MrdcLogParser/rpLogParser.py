@@ -5,7 +5,7 @@ import os,re
 
 ##global variables
 #globals, general variables
-LOG_NAME = "../../Log2Cmd/mrdc.log"#"mrdc.log_SMALL" #log file name
+LOG_NAME = "../mrdc.log_SMALL"#"mrdc.log_SMALL" #log file name
 LOG = "" #log file content
 CMDS = [] #row commands, including prefixes
 CTL_CMDS = []

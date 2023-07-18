@@ -21,9 +21,10 @@ color_codes = {
     "MAGENTA": "\033[35m",
     "CYAN": "\033[36m"
 }
-def print_color(message, color):
 
+def print_color(message, color):
     if color in color_codes:
         print(color_codes[color] + message + color_codes["RESET"])
     else:
-        print("Invalid color specified")
+        print(color_codes["RED"] + "Invalid color specified, color: ", color , "" + color_codes["RESET"])
+        exit()

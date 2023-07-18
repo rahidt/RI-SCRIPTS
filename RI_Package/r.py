@@ -4,6 +4,8 @@
 # 3. python -m   RI_Package.r  
 
 import utils as u
+import argparse
+
 #import a, b 
 
 if __name__ == '__main__': ####if runing the file directly, need to append the package to path, so imports would work.
@@ -14,18 +16,29 @@ if __name__ == '__main__': ####if runing the file directly, need to append the p
     #On the other hand, from RI_Package import a, b would be used if you were importing modules from the RI_Package package from a different package or module outside of the RI_Package package.
     #from . import a, b
 
-
-
+run_dir = None
+log_file = None
+debug_level = 0
 
 if __name__ == '__main__':
-    print ("p.py is being run directly, file: ", __file__)
-    u.print_color ("p.py is being run directly, RED", "RED")
-    try: 
-        if u.sys.argv[1] == 'a':
-            a.a_func()
-        elif sys.argv[1] == 'b':
-            b.b_func()
-        else:
-            print("Invalid argument. Please specify 'a' or 'b'.")
-    except IndexError:
-        print("No argument provided. Please specify 'a' or 'b'.")
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-r', '--run_dir', help='Run directory')
+    parser.add_argument('-l', '--log_file', help='Log file')
+    parser.add_argument('-debug', type=int, help='Debug level')
+
+    print("script activated, received next sys.argv: ", u.sys.argv)
+    u.print_color("script activated, received next sys.argv" + str(u.sys.argv), "GREEN")
+    args = parser.parse_args()
+
+    if args.run_dir:
+        run_dir = args.run_dir
+        print("run_dir: ", run_dir)
+
+    if args.log_file:
+        log_file = args.log_file
+        print("log_file: ", log_file)
+
+    if args.debug is not None:
+        debug_level = args.debug
+        print("debug_level: ", debug_level)

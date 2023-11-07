@@ -1,3 +1,9 @@
+# Description:  CDC-12436, also spec captured in https://docs.google.com/spreadsheets/d/107WNTw6a6cG7oU_nFOJvpX8Gi_lwRLj4Q8LViUosq1s/edit#gid=305334017
+#               This script is used to analyze RI logs and build a database of opcodes in use in our Testsuite
+#               The script is using regular expressions to find the opcodes in the logs and build a database
+#               of opcodes, severities and related log files.
+# 
+
 import os
 #import sys
 import re 
@@ -17,6 +23,9 @@ LOG_PATTERN = r'''(INFO|WARNING|ERROR)\s+\[#\s+(\d+)\]\s+.*'''
 LOG_FILES_ROOT_TREE = "/Users/romanpaleria/Documents/Scripts/RI logs for analyze/tmp logs for script debug/"
 LOG_FILES_ROOT_TREE = "/Users/romanpaleria/Documents/Scripts/RI logs for analyze/"
 
+IS_WORK_FROM_FILE = False
+DIR_LIST_FILE_PATH = "/Users/romanpaleria/Documents/Scripts/RI logs for analyze/dir_list.txt"
+    
 
 class LogDatabase:
     def __init__(self):
@@ -66,7 +75,9 @@ class LogDatabase:
     def opcode_with_biggest_counter(self):
         if not self.LOG_DICT:
             return None
-        return max(self.LOG_DICT, key=lambda opcode: self.LOG_DICT[opcode]['counter'])
+        opcode = max(self.LOG_DICT, key=lambda opcode: self.LOG_DICT[opcode]['counter'])
+        counter = self.LOG_DICT[opcode]['counter']
+        return opcode, counter
 
     def total_messages(self):
         return sum(data['counter'] for data in self.LOG_DICT.values())
@@ -92,11 +103,37 @@ class LogDatabase:
 
         print(f"Number of opcodes:                  {num_opcodes}")
         print("Opcodes with multiple severities:    ", opcodes_multiple_severities)
-        print(f"Opcode with the biggest counter:    {biggest_counter_opcode}")
+        print(f"Opcode with the biggest counter:    {biggest_counter_opcode}  (opcode/counter)")
         print(f"Total counted messages in the db:   {total_messages}")
         print(f"Total counted INFO    messages:     {count_info}")
         print(f"Total counted WARNING messages:     {count_warning}")
         print(f"Total counted ERROR messages:       {count_error}")
+
+def get_log_files_from_cfg_file(file_path):
+    '''Get all log files from the root tree'''
+    dir_cntr  = 0
+    dir_path_l = []
+    with open(file_path, 'r') as file:
+        for line in file:
+            line = line.strip()
+            if line.startswith('#'):
+                continue
+            dir_path_l.append(line)
+            dir_cntr += 1
+            #print ("file: {}, path: {}".format(filename,file_path))                
+    print(GREEN + "get_log_files_from_cfg_file() found {} dirs. File parsed : {}".format(dir_cntr,file_path) + RESET)
+    
+    file_cntr = 0
+    file_path_l = []
+    for dir in dir_path_l:
+        for root, dirs, files in os.walk(dir):
+            for filename in files:
+                file_path = os.path.join(root, filename)
+                file_path_l.append(file_path)
+                #with open(file_path, 'r', errors='replace') as file:
+                file_cntr += 1
+                #print ("file: {}, path: {}".format(filename,file_path))
+    return file_path_l
 
 def get_log_files(dir_tree):
     '''Get all log files from the root tree'''
@@ -154,8 +191,12 @@ def print_dir_size_stats(dir_path):
     print(f"Total files in dir structure {total_files} \n")
 
 if __name__ == "__main__":
-    print_dir_size_stats(LOG_FILES_ROOT_TREE)
-    files = get_log_files(LOG_FILES_ROOT_TREE)
+    if IS_WORK_FROM_FILE == False:
+        print_dir_size_stats(LOG_FILES_ROOT_TREE)
+        files = get_log_files(LOG_FILES_ROOT_TREE)
+    else:
+        files = get_log_files_from_cfg_file(DIR_LIST_FILE_PATH)
+    
     log_db = LogDatabase()
 
     grep_in_log_files(files, log_db)

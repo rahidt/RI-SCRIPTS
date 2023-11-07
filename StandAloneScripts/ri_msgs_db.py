@@ -18,14 +18,25 @@ YELLOW = "\x1b[33m"
 # Define the regular expression pattern using `re.VERBOSE`
 
 #LOG_PATTERN = r'''(INFO|WARNING|ERROR)\s+\[#\s+(\d){3,7}\]\s+.*'''
-LOG_PATTERN = r'''(INFO|WARNING|ERROR)\s+\[#\s+(\d+)\]\s+.*'''
+LOG_PATTERN = r'''(INFO|WARN|ERR)\s*\[#\s*(\d+)\]\s+.*'''
 
-LOG_FILES_ROOT_TREE = "/Users/romanpaleria/Documents/Scripts/RI logs for analyze/tmp logs for script debug/"
-LOG_FILES_ROOT_TREE = "/Users/romanpaleria/Documents/Scripts/RI logs for analyze/"
+MAX_LOG_SIZE_TO_ANALYZE_IN_MB = (1024**2)*5 #in MB
+LOG_PART_NAME_TO_RM = ["old", "2019", "rpt"] #["sma"]#
 
-IS_WORK_FROM_FILE = False
-DIR_LIST_FILE_PATH = "/Users/romanpaleria/Documents/Scripts/RI logs for analyze/dir_list.txt"
-    
+import socket
+machine_name = socket.gethostname()
+print("Machine Name:", machine_name)
+if ("Romans-MacBook-Air.local" in machine_name):
+    print("local MAC machine, working on local files")
+    LOG_FILES_ROOT_TREE = "/Users/romanpaleria/Documents/Scripts/RI logs/tmp logs for script debug/tmp"
+    DIR_LIST_FILE_PATH = "/Users/romanpaleria/Documents/Scripts/RI logs/dir_list.txt"
+    IS_WORK_FROM_FILE = False 
+else:
+    print(f"working on RI server machine: {machine_name}")
+    LOG_FILES_ROOT_TREE = "/home/roman/Testcases/Scripts/RiMessagesOpcodes/TOOL_LOGs/RI_REGR/log_dirs_list_11_tests"
+    DIR_LIST_FILE_PATH= "/home/roman/Testcases/Scripts/RiMessagesOpcodes/TOOL_LOGs/RI_REGR/log_dirs_list_10k"
+    IS_WORK_FROM_FILE = True 
+
 
 class LogDatabase:
     def __init__(self):
@@ -44,6 +55,7 @@ class LogDatabase:
             self.LOG_DICT[opcode]['severities'].append(severity)
             self.LOG_DICT[opcode]['log_files'].append(log_file)
         self.LOG_DICT[opcode]['counter'] += 1
+        print ("add_log_entry() opcode: {}, severity: {}, log_file: {}".format(opcode,severity,log_file))
 
     def get_entry(self, opcode):
         if opcode in self.LOG_DICT:
@@ -121,7 +133,7 @@ def get_log_files_from_cfg_file(file_path):
             dir_path_l.append(line)
             dir_cntr += 1
             #print ("file: {}, path: {}".format(filename,file_path))                
-    print(GREEN + "get_log_files_from_cfg_file() found {} dirs. File parsed : {}".format(dir_cntr,file_path) + RESET)
+    print("get_log_files_from_cfg_file() found {} dirs. CFG file parsed : {}".format(dir_cntr,file_path))
     
     file_cntr = 0
     file_path_l = []
@@ -133,6 +145,7 @@ def get_log_files_from_cfg_file(file_path):
                 #with open(file_path, 'r', errors='replace') as file:
                 file_cntr += 1
                 #print ("file: {}, path: {}".format(filename,file_path))
+    print("get_log_files_from_cfg_file() found {} files in the CFG file".format(len(file_path_l)))
     return file_path_l
 
 def get_log_files(dir_tree):
@@ -158,8 +171,12 @@ def grep_in_log_files(log_files, db):
     #compile the regexp pattern
     regex = re.compile(LOG_PATTERN)
 
-    for file in log_files:
+    for index, file in enumerate(log_files):
+        print(f"Processing file {index+1}/{len(log_files)}: {file}")
+        # Check the size of the file, skip if it's too large
+        file_size = os.path.getsize(file)
         with open(file) as f:
+            print( "openning: {}  file".format(file))
             try: 
                 text = f.read()
             except UnicodeDecodeError:
@@ -173,7 +190,43 @@ def grep_in_log_files(log_files, db):
             severity, opcode = match
             log_db.add_log_entry(opcode, severity, file)
 
-def print_dir_size_stats(dir_path):
+def filter_files(file_list):
+    orig_len = len(file_list)
+    print(GREEN + f"filter_files() found {orig_len} files. MAX_LOG_SIZE_TO_ANALYZE_IN_MB: {MAX_LOG_SIZE_TO_ANALYZE_IN_MB}" + RESET)
+    for file in file_list:
+        if os.path.getsize(file) > MAX_LOG_SIZE_TO_ANALYZE_IN_MB:
+            print(f"Skipping {file} due to large size")
+            file_list.remove(file)
+    print(YELLOW + f"filter_files() removed {orig_len - len(file_list)} files due to large size" + RESET)
+
+    #removing not relevant log files
+    # Iterate through the list and remove files that match the specified strings
+    files_to_keep = []
+    for file_path in files:
+        # Extract the file name from the path
+        file_name = os.path.basename(file_path)
+        
+        # Check if the file name contains any of the strings to remove
+        if not any(remove_str in file_name for remove_str in LOG_PART_NAME_TO_RM):
+            files_to_keep.append(file_path)
+    print(YELLOW + f"filter_files() removing {len(file_list) - len(files_to_keep)} files due to file names" + RESET)
+    file_list = files_to_keep   
+
+    print(f"filter_files() finished with {len(file_list)} files")
+    return file_list
+
+
+def print_total_file_size(file_list, prefix):
+    total_size = 0
+    for file_path in file_list:
+        #print(GREEN + f"print_total_file_size() {file_path}" + RESET)
+        if os.path.isfile(file_path):
+            total_size += os.path.getsize(file_path)
+    print(GREEN + f"\nprint_total_file_size() ---{prefix}---" + RESET)
+    print(f"Total size of analyzed file size: {total_size / (1024**2):.2f} MB")
+    print(f"Total files analyzed {len(file_list)} \n")
+
+'''def print_dir_size_stats(dir_path):
     total_dir_size = 0
     total_files = 0
     for dirpath, dirnames, filenames in os.walk(dir_path):
@@ -189,22 +242,30 @@ def print_dir_size_stats(dir_path):
     #print(f"Total size of '{directory_path}': {total_dir_size} bytes")
     print(f"Total size of '{directory_path}': {total_dir_size / (1024**2):.2f} MB")
     print(f"Total files in dir structure {total_files} \n")
-
+'''
 if __name__ == "__main__":
     if IS_WORK_FROM_FILE == False:
-        print_dir_size_stats(LOG_FILES_ROOT_TREE)
+        #print_dir_size_stats(LOG_FILES_ROOT_TREE)
         files = get_log_files(LOG_FILES_ROOT_TREE)
     else:
         files = get_log_files_from_cfg_file(DIR_LIST_FILE_PATH)
     
+    if len(files) == 0:
+        print(RED + "No log files found. Exiting" + RESET)
+        exit(1)
+
     log_db = LogDatabase()
 
+    print_total_file_size(files, "before filtering")
+    files = filter_files(files)
+    print_total_file_size(files, "after filtering")
     grep_in_log_files(files, log_db)
-
 
     log_db.print_statistics()
 
-    #log_db.print_database()
+  
+
+    #log_db.print_database() 
     #add_data_to_db(line)
 
     '''# Example usage:
@@ -221,3 +282,4 @@ if __name__ == "__main__":
     # Get all entries in the database
     all_entries = log_db.get_all_entries()
     print(all_entries)'''
+

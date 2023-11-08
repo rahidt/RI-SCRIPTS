@@ -20,8 +20,9 @@ YELLOW = "\x1b[33m"
 #LOG_PATTERN = r'''(INFO|WARNING|ERROR)\s+\[#\s+(\d){3,7}\]\s+.*'''
 LOG_PATTERN = r'''(INFO|WARN|ERR)\s*\[#\s*(\d+)\]\s+.*'''
 
-MAX_LOG_SIZE_TO_ANALYZE_IN_MB = (1024**2)*5 #in MB
+MAX_LOG_SIZE_TO_ANALYZE_IN_MB = (1024**2)*0.005 #in MB
 LOG_PART_NAME_TO_RM = ["old", "2016","2017","2018","2019", "rpt"] #["sma"]#
+REMOVE_FILES_NOT_UNDER_GOLD_DIR = True
 
 import socket
 machine_name = socket.gethostname()
@@ -31,14 +32,16 @@ if ("Romans-MacBook-Air.local" in machine_name):
     LOG_FILES_ROOT_TREE = "/Users/romanpaleria/Documents/Scripts/RI logs/tmp logs for script debug/tmp"
     DIR_LIST_FILE_PATH = "/Users/romanpaleria/Documents/Scripts/RI logs/dir_list.txt"
     IS_WORK_FROM_FILE = False 
+    REMOVE_FILES_NOT_UNDER_GOLD_DIR = False
 else:
     print(f"working on RI server machine: {machine_name}")
-    LOG_FILES_ROOT_TREE = "/home/roman/Testcases/Scripts/RiMessagesOpcodes/TOOL_LOGs/RI_REGR/log_dirs_list_11_tests"
-    DIR_LIST_FILE_PATH= "/home/roman/Testcases/Scripts/RiMessagesOpcodes/TOOL_LOGs/RI_REGR/log_dirs_list_10k"
-    IS_WORK_FROM_FILE = True 
+    LOG_FILES_ROOT_TREE = "/home/rgr/trunk/regress/TestSuite"
+    DIR_LIST_FILE_PATH= "/home/roman/Testcases/Scripts/RiMessagesOpcodes/TOOL_LOGs/RI_REGR/LOG_DIR_LISTS/log_dirs_list_1k"
+    DIR_LIST_FILE_PATH= "/home/roman/Testcases/Scripts/RiMessagesOpcodes/TOOL_LOGs/RI_REGR/LOG_DIR_LISTS/log_dirs_list_11_tests"
+    IS_WORK_FROM_FILE = False
 
 
-ENABLE_PROFILER = False
+ENABLE_PROFILER = False 
 if ENABLE_PROFILER == True:
     #This code creates a profiler object, enables it, runs the code you want to profile, disables the profiler, and prints the statistics.
     #For more advanced profiling and visualization, you can also use third-party tools like line_profiler, memory_profiler, or Pyflame. These tools provide additional insights into code performance and memory usage.
@@ -62,7 +65,7 @@ class LogDatabase:
             self.LOG_DICT[opcode]['severities'].append(severity)
             self.LOG_DICT[opcode]['log_files'].append(log_file)
         self.LOG_DICT[opcode]['counter'] += 1
-        print ("add_log_entry() opcode: {}, severity: {}, log_file: {}".format(opcode,severity,log_file))
+        #print ("add_log_entry() opcode: {}, severity: {}, log_file: {}".format(opcode,severity,log_file))
 
     def get_entry(self, opcode):
         if opcode in self.LOG_DICT:
@@ -141,11 +144,16 @@ class LogDatabase:
     def print_opcodes_inorder(self):
         print(GREEN + "\nLogDatabase::print_opcodes_inorder()" + RESET)
         #Convert opcode keys to integers, sort them, and print
-        sorted_opcodes = sorted(map(int, self.LOG_DICT.keys()))
-        for opcode in sorted_opcodes:
-            print(f"Opcode: {opcode}") #, Value: {self.LOG_DICT[str(opcode)]}")
-
-#############class end#####################
+        print(f"----Opcode:  \t\t ----Severityies:")
+        for key in sorted(self.LOG_DICT, key=lambda k: int(k)):
+            severities_l = self.LOG_DICT[key]['severities']
+            severities_str = ", ".join(severities_l)
+            logs_l = self.LOG_DICT[key]['log_files']
+            logs_str = ", ".join(logs_l)
+            print(f"{key} \t\t {severities_str} \t {logs_str}")
+####################################################
+#############class end##############################
+####################################################
 
 def get_log_files_from_cfg_file(file_path):
     '''Get all log files from the root tree'''
@@ -174,6 +182,7 @@ def get_log_files_from_cfg_file(file_path):
     print("get_log_files_from_cfg_file() found {} files in the CFG file".format(len(file_path_l)))
     return file_path_l
 
+
 def get_log_files(dir_tree):
     '''Get all log files from the root tree'''
     dir_cntr  = 0
@@ -189,7 +198,16 @@ def get_log_files(dir_tree):
             #print ("file: {}, path: {}".format(filename,file_path))
                 
     print(GREEN + "get_log_files() found {} dirs, {} files. worked on dirtree: {}".format(dir_cntr,file_cntr,dir_tree) + RESET)
-
+    if REMOVE_FILES_NOT_UNDER_GOLD_DIR == True:
+        print(GREEN + "get_log_files() removing files that are not under gold dir" + RESET)
+        logs_not_under_gold = 0
+        for file_path in file_path_l:
+            dir_fullpath = os.path.dirname(file_path)
+            uper_dir_name = os.path.basename(dir_fullpath)
+            if uper_dir_name != "gold":
+                file_path_l.remove(file_path)
+                logs_not_under_gold += 1
+        print(YELLOW + "get_log_files() removed {} files due to not under gold dir\n".format(logs_not_under_gold) + RESET)
     return file_path_l
 
 
@@ -202,7 +220,7 @@ def grep_in_log_files(log_files, db):
         # Check the size of the file, skip if it's too large
         file_size = os.path.getsize(file)
         with open(file) as f:
-            print( "openning: {}  file".format(file))
+            #print( "openning: {}  file".format(file))
             try: 
                 text = f.read()
             except UnicodeDecodeError:
@@ -300,6 +318,7 @@ if __name__ == "__main__":
     log_db.print_opcodes_inorder()
 
     if ENABLE_PROFILER == True:
+        print(GREEN + "\nPrinting run profile stats" + RESET)
         profiler.disable()
         profiler.print_stats(sort='cumulative')  
 

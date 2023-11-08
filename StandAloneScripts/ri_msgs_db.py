@@ -21,7 +21,7 @@ YELLOW = "\x1b[33m"
 LOG_PATTERN = r'''(INFO|WARN|ERR)\s*\[#\s*(\d+)\]\s+.*'''
 
 MAX_LOG_SIZE_TO_ANALYZE_IN_MB = (1024**2)*5 #in MB
-LOG_PART_NAME_TO_RM = ["old", "2019", "rpt"] #["sma"]#
+LOG_PART_NAME_TO_RM = ["old", "2016","2017","2018","2019", "rpt"] #["sma"]#
 
 import socket
 machine_name = socket.gethostname()
@@ -36,6 +36,13 @@ else:
     LOG_FILES_ROOT_TREE = "/home/roman/Testcases/Scripts/RiMessagesOpcodes/TOOL_LOGs/RI_REGR/log_dirs_list_11_tests"
     DIR_LIST_FILE_PATH= "/home/roman/Testcases/Scripts/RiMessagesOpcodes/TOOL_LOGs/RI_REGR/log_dirs_list_10k"
     IS_WORK_FROM_FILE = True 
+
+
+ENABLE_PROFILER = False
+if ENABLE_PROFILER == True:
+    #This code creates a profiler object, enables it, runs the code you want to profile, disables the profiler, and prints the statistics.
+    #For more advanced profiling and visualization, you can also use third-party tools like line_profiler, memory_profiler, or Pyflame. These tools provide additional insights into code performance and memory usage.
+    import cProfile
 
 
 class LogDatabase:
@@ -110,16 +117,35 @@ class LogDatabase:
         biggest_counter_opcode = self.opcode_with_biggest_counter()
         total_messages  = self.total_messages()
         count_info      = self.count_severity("INFO")
-        count_warning   = self.count_severity("WARNING")
-        count_error     = self.count_severity("ERROR")
+        count_warning   = self.count_severity("WARN")
+        count_error     = self.count_severity("ERR")
 
         print(f"Number of opcodes:                  {num_opcodes}")
         print("Opcodes with multiple severities:    ", opcodes_multiple_severities)
+        if opcodes_multiple_severities != []:
+            print(RED + "ERROR: opcodes_multiple_severities != []" + RESET)
+            for opcode in opcodes_multiple_severities:
+                print(f"opcode: {opcode}  severities: {self.LOG_DICT[opcode]['severities']}  log_files: {self.LOG_DICT[opcode]['log_files']}")  
+
         print(f"Opcode with the biggest counter:    {biggest_counter_opcode}  (opcode/counter)")
         print(f"Total counted messages in the db:   {total_messages}")
         print(f"Total counted INFO    messages:     {count_info}")
         print(f"Total counted WARNING messages:     {count_warning}")
         print(f"Total counted ERROR messages:       {count_error}")
+
+        if total_messages != count_info + count_warning + count_error:
+            print(RED + "ERROR: total_messages != count_info + count_warning + count_error" + RESET)
+    def is_numeric(self, value):
+        return isinstance(value, (int, float, complex))
+    
+    def print_opcodes_inorder(self):
+        print(GREEN + "\nLogDatabase::print_opcodes_inorder()" + RESET)
+        #Convert opcode keys to integers, sort them, and print
+        sorted_opcodes = sorted(map(int, self.LOG_DICT.keys()))
+        for opcode in sorted_opcodes:
+            print(f"Opcode: {opcode}") #, Value: {self.LOG_DICT[str(opcode)]}")
+
+#############class end#####################
 
 def get_log_files_from_cfg_file(file_path):
     '''Get all log files from the root tree'''
@@ -243,7 +269,16 @@ def print_total_file_size(file_list, prefix):
     print(f"Total size of '{directory_path}': {total_dir_size / (1024**2):.2f} MB")
     print(f"Total files in dir structure {total_files} \n")
 '''
-if __name__ == "__main__":
+
+
+
+
+
+if __name__ == "__main__":    
+    if ENABLE_PROFILER == True:
+        profiler = cProfile.Profile()
+        profiler.enable()
+
     if IS_WORK_FROM_FILE == False:
         #print_dir_size_stats(LOG_FILES_ROOT_TREE)
         files = get_log_files(LOG_FILES_ROOT_TREE)
@@ -262,8 +297,11 @@ if __name__ == "__main__":
     grep_in_log_files(files, log_db)
 
     log_db.print_statistics()
+    log_db.print_opcodes_inorder()
 
-  
+    if ENABLE_PROFILER == True:
+        profiler.disable()
+        profiler.print_stats(sort='cumulative')  
 
     #log_db.print_database() 
     #add_data_to_db(line)

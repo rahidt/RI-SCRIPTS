@@ -23,16 +23,20 @@ LOG_PATTERN = r'''(INFO|WARN|ERR)\s*\[#\s*(\d+)\]\s+.*'''
 MAX_LOG_SIZE_TO_ANALYZE_IN_MB = (1024**2)*0.005 #in MB
 LOG_PART_NAME_TO_RM = ["old", "2016","2017","2018","2019", "rpt"] #["sma"]#
 REMOVE_FILES_NOT_UNDER_GOLD_DIR = True
+GOLD_DIR_NAMES_LIST = ["gold"]
+MAX_FILES_TO_GREP = 1234567
 
 import socket
 machine_name = socket.gethostname()
 print("Machine Name:", machine_name)
 if ("Romans-MacBook-Air.local" in machine_name):
     print("local MAC machine, working on local files")
-    LOG_FILES_ROOT_TREE = "/Users/romanpaleria/Documents/Scripts/RI logs/tmp logs for script debug/tmp"
+    LOG_FILES_ROOT_TREE = "/Users/romanpaleria/Documents/Scripts/RI logs/tmp logs for script debug/"
     DIR_LIST_FILE_PATH = "/Users/romanpaleria/Documents/Scripts/RI logs/dir_list.txt"
     IS_WORK_FROM_FILE = False 
-    REMOVE_FILES_NOT_UNDER_GOLD_DIR = False
+    REMOVE_FILES_NOT_UNDER_GOLD_DIR = True
+    GOLD_DIR_NAMES_LIST = ["gold",'tmp',"tmp logs for script debug"]
+    MAX_LOG_SIZE_TO_ANALYZE_IN_MB = (1024**2)*5 #in MB
 else:
     print(f"working on RI server machine: {machine_name}")
     LOG_FILES_ROOT_TREE = "/home/rgr/trunk/regress/TestSuite"
@@ -110,7 +114,7 @@ class LogDatabase:
             #severities, _, _ = data
             for severity in data['severities']:
                 if severity == severity_type:
-                    count += 1
+                    count += data['counter']
         return count
 
     def print_statistics(self):
@@ -137,7 +141,7 @@ class LogDatabase:
         print(f"Total counted ERROR messages:       {count_error}")
 
         if total_messages != count_info + count_warning + count_error:
-            print(RED + "ERROR: total_messages != count_info + count_warning + count_error" + RESET)
+            print(RED + f"ERROR: {total_messages} != {count_info + count_warning + count_error} ---> total_messages != count_info + count_warning + count_error " + RESET)
     def is_numeric(self, value):
         return isinstance(value, (int, float, complex))
     
@@ -190,30 +194,68 @@ def get_log_files(dir_tree):
     file_path_l = []
     for root, dirs, files in os.walk(dir_tree):
         dir_cntr += 1
+        if file_cntr > MAX_FILES_TO_GREP:
+            print(YELLOW + "get_log_files() reached MAX_FILES_TO_GREP: {}  -- skipping the rest of the files".format(MAX_FILES_TO_GREP) + RESET)
+            break           
         for filename in files:
             file_path = os.path.join(root, filename)
             file_path_l.append(file_path)
             #with open(file_path, 'r', errors='replace') as file:
             file_cntr += 1
+
             #print ("file: {}, path: {}".format(filename,file_path))
-                
     print(GREEN + "get_log_files() found {} dirs, {} files. worked on dirtree: {}".format(dir_cntr,file_cntr,dir_tree) + RESET)
-    if REMOVE_FILES_NOT_UNDER_GOLD_DIR == True:
-        print(GREEN + "get_log_files() removing files that are not under gold dir" + RESET)
-        logs_not_under_gold = 0
-        for file_path in file_path_l:
-            dir_fullpath = os.path.dirname(file_path)
-            uper_dir_name = os.path.basename(dir_fullpath)
-            if uper_dir_name != "gold":
-                file_path_l.remove(file_path)
-                logs_not_under_gold += 1
-        print(YELLOW + "get_log_files() removed {} files due to not under gold dir\n".format(logs_not_under_gold) + RESET)
+    
     return file_path_l
 
 
-def grep_in_log_files(log_files, db):
+from concurrent.futures import ThreadPoolExecutor
+# ... (Previous code, imports, constants, and LogDatabase class)
+def process_log_file(log_file, log_db):
+    # Log file processing code here
     #compile the regexp pattern
     regex = re.compile(LOG_PATTERN)
+
+    print(GREEN + f"Processing file: {log_file}" + RESET)
+    
+    # Check the size of the file, skip if it's too large
+    file_size = os.path.getsize(log_file)
+    
+    with open(log_file) as f:
+        try:
+            text = f.read()
+        except UnicodeDecodeError:
+            print(YELLOW + f"process_log_file(): UnicodeDecodeError: {log_file} -- skipping the file" + RESET)
+            return
+
+    # Find all matches in the text
+    matches = regex.findall(text)
+
+    # Add all matches to the database
+    for match in matches:
+        severity, opcode = match
+        log_db.add_log_entry(opcode, severity, log_file)
+
+def process_log_files(log_files, log_db):
+    print(GREEN + f"\n---process_log_files(): {len(log_files)} files" + RESET)
+    results = []
+    with ThreadPoolExecutor(max_workers=4) as executor:  # Adjust max_workers as needed
+        for log_file in log_files:
+            results.append(executor.submit(process_log_file, log_file, log_db))
+
+    # Wait for all threads to finish
+    for result in results:
+        result.result()
+
+
+
+
+'''
+def process_log_files(log_files, db):
+    #compile the regexp pattern
+    regex = re.compile(LOG_PATTERN)
+    
+    print(GREEN + "\n---process_log_files: {} files".format(len(log_files)) + RESET)
 
     for index, file in enumerate(log_files):
         print(f"Processing file {index+1}/{len(log_files)}: {file}")
@@ -233,32 +275,93 @@ def grep_in_log_files(log_files, db):
         for match in matches:
             severity, opcode = match
             log_db.add_log_entry(opcode, severity, file)
+'''
 
-def filter_files(file_list):
+def filter_files_by_accessability(file_list):
+    return_list = []
+    no_access_count = 0
+    no_read_count = 0
+    for file_path in file_list:
+        if os.path.exists(file_path):
+            if os.access(file_path, os.R_OK):
+                return_list.append(file_path)
+            else:
+                no_read_count += 1
+                print(RED + f"The file '{file_path}' is not readable. Skipping this file."+ RESET)
+                # Handle the case where the file is not readable
+        else:
+            no_access_count += 1
+            print(RED + f"The file '{file_path}' does not exist. Skipping this file." + RESET)
+            # Handle the case where the file doesn't exist or take any other necessary actions.
+    print(GREEN + f"---filter_files_by_accessability() found {len(file_list)} files. removed {no_access_count},{no_read_count} as not accesable,readable" + RESET)
+    return return_list
+
+def filter_files_by_size(file_list):
     orig_len = len(file_list)
-    print(GREEN + f"filter_files() found {orig_len} files. MAX_LOG_SIZE_TO_ANALYZE_IN_MB: {MAX_LOG_SIZE_TO_ANALYZE_IN_MB}" + RESET)
+    print(GREEN + f"---filter_files_by_size() found {orig_len} files. MAX_LOG_SIZE_TO_ANALYZE_IN_MB: {MAX_LOG_SIZE_TO_ANALYZE_IN_MB}" + RESET)
     for file in file_list:
         if os.path.getsize(file) > MAX_LOG_SIZE_TO_ANALYZE_IN_MB:
             print(f"Skipping {file} due to large size")
             file_list.remove(file)
-    print(YELLOW + f"filter_files() removed {orig_len - len(file_list)} files due to large size" + RESET)
+    print(YELLOW + f"filter_files_by_size() removed {orig_len - len(file_list)} files due to large size" + RESET)
+    return file_list
 
+def filter_files_by_log_part_name(file_list) :
     #removing not relevant log files
     # Iterate through the list and remove files that match the specified strings
     files_to_keep = []
-    for file_path in files:
+    for file_path in file_list:
         # Extract the file name from the path
         file_name = os.path.basename(file_path)
         
         # Check if the file name contains any of the strings to remove
         if not any(remove_str in file_name for remove_str in LOG_PART_NAME_TO_RM):
             files_to_keep.append(file_path)
-    print(YELLOW + f"filter_files() removing {len(file_list) - len(files_to_keep)} files due to file names" + RESET)
+    print(YELLOW + f"filter_files_by_log_part_name() removing {len(file_list) - len(files_to_keep)} files due to file names" + RESET)
     file_list = files_to_keep   
 
-    print(f"filter_files() finished with {len(file_list)} files")
+    print(GREEN + f"---filter_files_by_log_part_name() finished with {len(file_list)} files" + RESET)
     return file_list
 
+'''def filter_files_by_dir_name (file_list):
+    return_file_list = []
+    print(GREEN + "---filter_files_by_dir_name() found {} files".format(len(file_list)) + RESET)
+    if REMOVE_FILES_NOT_UNDER_GOLD_DIR == True:
+        print(GREEN + f"removing files that are not under gold dirs {GOLD_DIR_NAMES_LIST}" + RESET)
+        logs_under_gold = 0
+        for gold_dir in GOLD_DIR_NAMES_LIST:
+            for file_path in return_file_list:
+                dir_fullpath = os.path.dirname(file_path)
+                uper_dir_name = os.path.basename(dir_fullpath)
+                if uper_dir_name == gold_dir:
+                    return_file_list.add(file_path)
+                    #print(f"removed {file_path} due to not under gold dir, gold_dir: {gold_dir}\n")
+                    logs_under_gold += 1
+        print(YELLOW + "removed {} files due to not under gold dir\n".format(len(file_list) - logs_under_gold) + RESET)
+    
+    return return_file_list'''
+def filter_files_by_dir_name_chatGPT(file_paths):
+    relevant_file_paths = [
+        path for path in file_paths
+        if any(gold_dir in path.split(os.path.sep)[-2] for gold_dir in GOLD_DIR_NAMES_LIST)
+    ]
+    not_relevant_file_paths = set(file_paths) - set(relevant_file_paths)
+    print(GREEN + f"---filter_files_by_dir_name_chatGPT() total {len(file_paths)} files. {len(relevant_file_paths)} files relevant. removed {len(not_relevant_file_paths)} files " + RESET)
+    for i,path in enumerate(not_relevant_file_paths):
+        print(f"removed {i}/{len(not_relevant_file_paths)}, path: {path}")
+    
+    return relevant_file_paths
+
+def filter_files(file_list):
+    print(GREEN + f"----filter_files() found {len(file_list)} files." + RESET)
+    file_list = filter_files_by_accessability(file_list)
+    #file_list = filter_files_by_dir_name(file_list)
+    file_list = filter_files_by_dir_name_chatGPT(file_list)
+    file_list = filter_files_by_log_part_name(file_list)
+    file_list = filter_files_by_size(file_list)
+    
+    print(f"filter_files() finished with {len(file_list)} files")
+    return file_list
 
 def print_total_file_size(file_list, prefix):
     total_size = 0
@@ -312,7 +415,7 @@ if __name__ == "__main__":
     print_total_file_size(files, "before filtering")
     files = filter_files(files)
     print_total_file_size(files, "after filtering")
-    grep_in_log_files(files, log_db)
+    process_log_files(files, log_db)
 
     log_db.print_statistics()
     log_db.print_opcodes_inorder()
@@ -339,4 +442,5 @@ if __name__ == "__main__":
     # Get all entries in the database
     all_entries = log_db.get_all_entries()
     print(all_entries)'''
+
 

@@ -7,6 +7,9 @@
 import os
 #import sys
 import re 
+import shutil
+from datetime import datetime
+TIMESTAMP = datetime.now().strftime('%Y%m%d%H%M%S')
 
 # Color escape codes
 RESET = "\x1b[0m"
@@ -20,11 +23,17 @@ YELLOW = "\x1b[33m"
 #LOG_PATTERN = r'''(INFO|WARNING|ERROR)\s+\[#\s+(\d){3,7}\]\s+.*'''
 LOG_PATTERN = r'''(INFO|WARN|ERR)\s*\[#\s*(\d+)\]\s+.*'''
 
-MAX_LOG_SIZE_TO_ANALYZE_IN_MB = (1024**2)*0.005 #in MB
+#MAX_LOG_SIZE_TO_ANALYZE_IN_MB = (1024**2)*0.005 #in MB
+MAX_LOG_SIZE_TO_ANALYZE_IN_MB       = .005
+MAX_LOG_SIZE_TO_ANALYZE_IN_BYTES    = (1024**2)*MAX_LOG_SIZE_TO_ANALYZE_IN_MB #in MB
+
 LOG_PART_NAME_TO_RM = ["old", "2016","2017","2018","2019", "rpt"] #["sma"]#
 REMOVE_FILES_NOT_UNDER_GOLD_DIR = True
 GOLD_DIR_NAMES_LIST = ["gold"]
-MAX_FILES_TO_GREP = 1234567
+MAX_FILES_TO_GREP = 12345678
+CREATE_TESTSUITE_FILES = True
+FIND_TESTSUITE_FILES   = False 
+COMMENT_LINE = "#"
 
 import socket
 machine_name = socket.gethostname()
@@ -33,17 +42,16 @@ if ("Romans-MacBook-Air.local" in machine_name):
     print("local MAC machine, working on local files")
     LOG_FILES_ROOT_TREE = "/Users/romanpaleria/Documents/Scripts/RI logs/tmp logs for script debug/"
     DIR_LIST_FILE_PATH = "/Users/romanpaleria/Documents/Scripts/RI logs/dir_list.txt"
-    IS_WORK_FROM_FILE = False 
     REMOVE_FILES_NOT_UNDER_GOLD_DIR = True
     GOLD_DIR_NAMES_LIST = ["gold",'tmp',"tmp logs for script debug"]
-    MAX_LOG_SIZE_TO_ANALYZE_IN_MB = (1024**2)*5 #in MB
+
 else:
     print(f"working on RI server machine: {machine_name}")
-    LOG_FILES_ROOT_TREE = "/home/rgr/trunk/regress/TestSuite"
+    LOG_FILES_ROOT_TREE = "/home/rgr/trunk/regress/TestSuite/jira/"
+    LOG_FILES_ROOT_TREE = "/home/rgr/trunk/regress/TestSuite/"
     DIR_LIST_FILE_PATH= "/home/roman/Testcases/Scripts/RiMessagesOpcodes/TOOL_LOGs/RI_REGR/LOG_DIR_LISTS/log_dirs_list_1k"
     DIR_LIST_FILE_PATH= "/home/roman/Testcases/Scripts/RiMessagesOpcodes/TOOL_LOGs/RI_REGR/LOG_DIR_LISTS/log_dirs_list_11_tests"
-    IS_WORK_FROM_FILE = False
-
+    DIR_LIST_FILE_PATH= "/home/roman/Testcases/Scripts/RiMessagesOpcodes/TOOL_LOGs/RI_REGR/TestSuiteFileLists/files_for_grep.all"
 
 ENABLE_PROFILER = False 
 if ENABLE_PROFILER == True:
@@ -159,18 +167,18 @@ class LogDatabase:
 #############class end##############################
 ####################################################
 
-def get_log_files_from_cfg_file(file_path):
-    '''Get all log files from the root tree'''
+'''def get_log_files_from_cfg_file(file_path):
+    #Get all log files from the root tree
     dir_cntr  = 0
     dir_path_l = []
     with open(file_path, 'r') as file:
         for line in file:
             line = line.strip()
-            if line.startswith('#'):
+            if line.startswith(COMMENT_LINE):
                 continue
             dir_path_l.append(line)
             dir_cntr += 1
-            #print ("file: {}, path: {}".format(filename,file_path))                
+            #print ("file: {}, path: {}".format(file_path.split(os.path.sep)[-1],file_path))                
     print("get_log_files_from_cfg_file() found {} dirs. CFG file parsed : {}".format(dir_cntr,file_path))
     
     file_cntr = 0
@@ -182,8 +190,24 @@ def get_log_files_from_cfg_file(file_path):
                 file_path_l.append(file_path)
                 #with open(file_path, 'r', errors='replace') as file:
                 file_cntr += 1
-                #print ("file: {}, path: {}".format(filename,file_path))
+                print ("file: {}, path: {}".format(filename,file_path))
     print("get_log_files_from_cfg_file() found {} files in the CFG file".format(len(file_path_l)))
+    return file_path_l'''
+
+    
+def get_log_files_from_cfg_file(file_path):
+    '''Get all log files from the root tree'''
+    file_cntr  = 0
+    file_path_l = []
+    with open(file_path, 'r') as file:
+        for line in file:
+            line = line.strip()
+            if line.startswith(COMMENT_LINE):
+                continue
+            file_path_l.append(line)
+            file_cntr += 1
+            #print ("file: {}, path: {}".format(file_path.split(os.path.sep)[-1],file_path))                
+    print("get_log_files_from_cfg_file() found {} files. CFG file parsed : {}".format(file_cntr,file_path))
     return file_path_l
 
 
@@ -298,13 +322,15 @@ def filter_files_by_accessability(file_list):
 
 def filter_files_by_size(file_list):
     orig_len = len(file_list)
+    removed_file_list = []
     print(GREEN + f"---filter_files_by_size() found {orig_len} files. MAX_LOG_SIZE_TO_ANALYZE_IN_MB: {MAX_LOG_SIZE_TO_ANALYZE_IN_MB}" + RESET)
     for file in file_list:
-        if os.path.getsize(file) > MAX_LOG_SIZE_TO_ANALYZE_IN_MB:
+        if os.path.getsize(file) > MAX_LOG_SIZE_TO_ANALYZE_IN_BYTES:
             print(f"Skipping {file} due to large size")
             file_list.remove(file)
+            removed_file_list.append(file) 
     print(YELLOW + f"filter_files_by_size() removed {orig_len - len(file_list)} files due to large size" + RESET)
-    return file_list
+    return file_list, removed_file_list
 
 def filter_files_by_log_part_name(file_list) :
     #removing not relevant log files
@@ -358,10 +384,26 @@ def filter_files(file_list):
     #file_list = filter_files_by_dir_name(file_list)
     file_list = filter_files_by_dir_name_chatGPT(file_list)
     file_list = filter_files_by_log_part_name(file_list)
-    file_list = filter_files_by_size(file_list)
+    file_list, oversized_files_list = filter_files_by_size(file_list)
     
     print(f"filter_files() finished with {len(file_list)} files")
-    return file_list
+    return file_list, oversized_files_list 
+
+
+def  create_testsuite_files(file_list, file_name, prefix = ""):
+
+    if os.path.exists(file_name):
+        new_file_name = f"{file_name}_{TIMESTAMP}"
+        shutil.move(file_name, new_file_name)
+    
+    with open(file_name, 'w') as file:
+        file.write(f"{COMMENT_LINE} {prefix}\n")
+        file.write(f"{COMMENT_LINE} working on root tree {LOG_FILES_ROOT_TREE}\n")
+        for file_path in file_list:
+            file.write(file_path + '\n')
+        file.close()
+    print(GREEN + f"--create_testsuite_files() working on root tree {LOG_FILES_ROOT_TREE}" + RESET)
+    print(f"create_testsuite_files() created file: {file_name}")
 
 def print_total_file_size(file_list, prefix):
     total_size = 0
@@ -400,7 +442,7 @@ if __name__ == "__main__":
         profiler = cProfile.Profile()
         profiler.enable()
 
-    if IS_WORK_FROM_FILE == False:
+    if FIND_TESTSUITE_FILES == True:
         #print_dir_size_stats(LOG_FILES_ROOT_TREE)
         files = get_log_files(LOG_FILES_ROOT_TREE)
     else:
@@ -411,10 +453,21 @@ if __name__ == "__main__":
         exit(1)
 
     log_db = LogDatabase()
-
-    print_total_file_size(files, "before filtering")
-    files = filter_files(files)
-    print_total_file_size(files, "after filtering")
+    
+    if FIND_TESTSUITE_FILES == True: #using CFG file, expecting only relevant files in it.
+        print_total_file_size(files, "before filtering")
+        files, oversized_files = filter_files(files)
+        all_logs_in_golden_list = files + oversized_files 
+        print_total_file_size(files, "after filtering")
+        print_total_file_size(all_logs_in_golden_list , "after filtering, including oversized files")
+        if CREATE_TESTSUITE_FILES == True:
+            print(GREEN + "\nCreating testsuite files" + RESET)
+            comment = f"This is autogenerated list of all files that has size < {MAX_LOG_SIZE_TO_ANALYZE_IN_MB} MB in Testsuite golden dir that could be relevant for grep"
+            create_testsuite_files(files, "files_for_grep.all",comment)
+            comment = f"This is autogenerated list of all files that has size > {MAX_LOG_SIZE_TO_ANALYZE_IN_MB} MB in Testsuite golden dir that could be relevant for grep"
+            create_testsuite_files(oversized_files, "files_for_grep.oversized",comment)
+            exit(0)
+    
     process_log_files(files, log_db)
 
     log_db.print_statistics()
@@ -442,5 +495,6 @@ if __name__ == "__main__":
     # Get all entries in the database
     all_entries = log_db.get_all_entries()
     print(all_entries)'''
+
 
 

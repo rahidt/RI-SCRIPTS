@@ -52,6 +52,8 @@ else:
     DIR_LIST_FILE_PATH= "/home/roman/Testcases/Scripts/RiMessagesOpcodes/TOOL_LOGs/RI_REGR/LOG_DIR_LISTS/log_dirs_list_1k"
     DIR_LIST_FILE_PATH= "/home/roman/Testcases/Scripts/RiMessagesOpcodes/TOOL_LOGs/RI_REGR/LOG_DIR_LISTS/log_dirs_list_11_tests"
     DIR_LIST_FILE_PATH= "/home/roman/Testcases/Scripts/RiMessagesOpcodes/TOOL_LOGs/RI_REGR/TestSuiteFileLists/files_for_grep.all"
+    #this is pregenerated file of about 1.1k logs that keeps 1649! opcodes
+    DIR_LIST_FILE_PATH= "/home/roman/Testcases/Scripts/RiMessagesOpcodes/TOOL_LOGs/RI_REGR/db_opcodes_logs.all"
 
 ENABLE_PROFILER = False 
 if ENABLE_PROFILER == True:
@@ -145,12 +147,19 @@ class LogDatabase:
         # effectively removing any duplicates.    
         uniq_log_files = list(set(log_files))    
         print(f"Total number of log files: {len(log_files)}")
+        print(f"Total number of uniq log files: {len(uniq_log_files)} - start")
+        for i, log_file in enumerate (uniq_log_files):
+            print(f"{i+1}/{len(uniq_log_files)} {log_file} ")
         print(f"Total number of uniq log files: {len(uniq_log_files)}")
-        for log_file in uniq_log_files:
-            print(log_file)
-        
-        with open("db_opcodes_logs.all", 'w') as file:
+       
+        file_name = "db_opcodes_logs.all" 
+        if os.path.exists(file_name):
+            new_file_name = f"{file_name}_{TIMESTAMP}"
+            shutil.move(file_name, new_file_name)
+
+        with open(file_name , 'w') as file:
             file.write(f"{COMMENT_LINE} working on root tree {LOG_FILES_ROOT_TREE}\n")
+            file.write(f"{COMMENT_LINE} Total number of opcodes: {self.num_opcodes()}\n")
             file.write(f"{COMMENT_LINE} Total number of uniq log files: {len(uniq_log_files)}\n")
             for log_path in uniq_log_files:
                 file.write(log_path + '\n')
@@ -532,6 +541,7 @@ if __name__ == "__main__":
     # Get all entries in the database
     all_entries = log_db.get_all_entries()
     print(all_entries)'''
+
 
 
 

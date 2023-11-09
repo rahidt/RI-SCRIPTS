@@ -125,8 +125,14 @@ class LogDatabase:
                     count += data['counter']
         return count
 
+
     def print_statistics(self):
-        print(GREEN + "\nLogDatabase::print_statistics()" + RESET)
+        print(GREEN + "\n---LogDatabase::print_statistics()" + RESET)
+        self.print_opcodes_inorder()
+        self.print_db_summary_stats()
+        
+    def print_db_summary_stats(self):
+        print(GREEN + "--LogDatabase::print_db_summary_stats()" + RESET)
         num_opcodes = self.num_opcodes()
         opcodes_multiple_severities = self.opcodes_with_multiple_severities()
         biggest_counter_opcode = self.opcode_with_biggest_counter()
@@ -136,9 +142,9 @@ class LogDatabase:
         count_error     = self.count_severity("ERR")
 
         print(f"Number of opcodes:                  {num_opcodes}")
-        print("Opcodes with multiple severities:    ", opcodes_multiple_severities)
         if opcodes_multiple_severities != []:
             print(RED + "ERROR: opcodes_multiple_severities != []" + RESET)
+            print("Opcodes with multiple severities:    ", opcodes_multiple_severities)
             for opcode in opcodes_multiple_severities:
                 print(f"opcode: {opcode}  severities: {self.LOG_DICT[opcode]['severities']}  log_files: {self.LOG_DICT[opcode]['log_files']}")  
 
@@ -150,13 +156,15 @@ class LogDatabase:
 
         if total_messages != count_info + count_warning + count_error:
             print(RED + f"ERROR: {total_messages} != {count_info + count_warning + count_error} ---> total_messages != count_info + count_warning + count_error " + RESET)
+        
+    
     def is_numeric(self, value):
         return isinstance(value, (int, float, complex))
     
     def print_opcodes_inorder(self):
         print(GREEN + "\nLogDatabase::print_opcodes_inorder()" + RESET)
         #Convert opcode keys to integers, sort them, and print
-        print(f"----Opcode:  \t\t ----Severityies:")
+        print(f"----Opcode:  \t\t ----Severityies: \t ----Log Files:")
         for key in sorted(self.LOG_DICT, key=lambda k: int(k)):
             severities_l = self.LOG_DICT[key]['severities']
             severities_str = ", ".join(severities_l)
@@ -198,16 +206,18 @@ class LogDatabase:
 def get_log_files_from_cfg_file(file_path):
     '''Get all log files from the root tree'''
     file_cntr  = 0
+    cmnt_cntr  = 0
     file_path_l = []
     with open(file_path, 'r') as file:
         for line in file:
             line = line.strip()
             if line.startswith(COMMENT_LINE):
+                cmnt_cntr += 1
                 continue
             file_path_l.append(line)
             file_cntr += 1
             #print ("file: {}, path: {}".format(file_path.split(os.path.sep)[-1],file_path))                
-    print("get_log_files_from_cfg_file() found {} files. CFG file parsed : {}".format(file_cntr,file_path))
+    print("get_log_files_from_cfg_file() found {} files, {} comment lines. CFG file parsed : {}".format(file_cntr,cmnt_cntr,file_path))
     return file_path_l
 
 
@@ -240,7 +250,7 @@ def process_log_file(log_file, log_db):
     #compile the regexp pattern
     regex = re.compile(LOG_PATTERN)
 
-    print(GREEN + f"Processing file: {log_file}" + RESET)
+    #print(GREEN + f"Processing file: {log_file}" + RESET)
     
     # Check the size of the file, skip if it's too large
     file_size = os.path.getsize(log_file)
@@ -263,8 +273,10 @@ def process_log_file(log_file, log_db):
 def process_log_files(log_files, log_db):
     print(GREEN + f"\n---process_log_files(): {len(log_files)} files" + RESET)
     results = []
+    num_of_logs = len(log_files)
     with ThreadPoolExecutor(max_workers=4) as executor:  # Adjust max_workers as needed
-        for log_file in log_files:
+        for inx, log_file in enumerate(log_files):
+            print(f"Processing log {inx+1}/{num_of_logs}: {log_file}")
             results.append(executor.submit(process_log_file, log_file, log_db))
 
     # Wait for all threads to finish
@@ -471,7 +483,6 @@ if __name__ == "__main__":
     process_log_files(files, log_db)
 
     log_db.print_statistics()
-    log_db.print_opcodes_inorder()
 
     if ENABLE_PROFILER == True:
         print(GREEN + "\nPrinting run profile stats" + RESET)

@@ -129,10 +129,36 @@ class LogDatabase:
     def print_statistics(self):
         print(GREEN + "\n---LogDatabase::print_statistics()" + RESET)
         self.print_opcodes_inorder()
+        self.print_all_db_log_files()
         self.print_db_summary_stats()
+
+    def print_all_db_log_files(self):
+        print(GREEN + "\n--LogDatabase::print_all_db_log_files()" + RESET)
+        log_files = []
+        for opcode, data in self.LOG_DICT.items():
+            for log_file in data['log_files']:
+                log_files.append(log_file)
+
+        #is used to remove duplicate elements from the log_files list. 
+        # It does this by first converting the list to a set, which automatically eliminates duplicates
+        #  since sets only store unique elements. Then, the code converts the set back to a list, 
+        # effectively removing any duplicates.    
+        uniq_log_files = list(set(log_files))    
+        print(f"Total number of log files: {len(log_files)}")
+        print(f"Total number of uniq log files: {len(uniq_log_files)}")
+        for log_file in uniq_log_files:
+            print(log_file)
         
+        with open("db_opcodes_logs.all", 'w') as file:
+            file.write(f"{COMMENT_LINE} working on root tree {LOG_FILES_ROOT_TREE}\n")
+            file.write(f"{COMMENT_LINE} Total number of uniq log files: {len(uniq_log_files)}\n")
+            for log_path in uniq_log_files:
+                file.write(log_path + '\n')
+            file.close()
+        
+
     def print_db_summary_stats(self):
-        print(GREEN + "--LogDatabase::print_db_summary_stats()" + RESET)
+        print(GREEN + "\n--LogDatabase::print_db_summary_stats()" + RESET)
         num_opcodes = self.num_opcodes()
         opcodes_multiple_severities = self.opcodes_with_multiple_severities()
         biggest_counter_opcode = self.opcode_with_biggest_counter()
